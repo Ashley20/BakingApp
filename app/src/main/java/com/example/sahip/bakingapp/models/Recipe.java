@@ -25,6 +25,8 @@ public class Recipe {
     @Expose
     private String image;
 
+    public Recipe(){}
+
     public Integer getId() {
         return id;
     }
@@ -73,4 +75,15 @@ public class Recipe {
         this.image = image;
     }
 
+    @Override
+    public String toString() {
+        return "Recipe{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", ingredients=" + ingredients +
+                ", steps=" + steps +
+                ", servings=" + servings +
+                ", image='" + image + '\'' +
+                '}';
+    }
 }
