@@ -14,6 +14,8 @@ import android.view.ViewGroup;
 
 import com.example.sahip.bakingapp.MainActivity;
 import com.example.sahip.bakingapp.R;
+import com.example.sahip.bakingapp.RecipeDetailActivity;
+import com.example.sahip.bakingapp.database.TinyDB;
 import com.example.sahip.bakingapp.models.Recipe;
 import com.example.sahip.bakingapp.rest.HttpClient;
 import com.google.gson.Gson;
@@ -39,7 +41,7 @@ public class MasterListFragment extends Fragment {
             = "https://d17h27t6h515a5.cloudfront.net/topher/2017/May/59121517_baking/baking.json";
     private RecyclerView recyclerView;
     private MasterListAdapter masterListAdapter;
-    private List<Recipe> mRecipeList = new ArrayList<>();
+    private ArrayList<Recipe> mRecipeList = new ArrayList<Recipe>();
     private Request mRequest = null;
 
 
@@ -105,6 +107,10 @@ public class MasterListFragment extends Fragment {
                                 mRecipeList.add(recipe);
 
                             }
+
+                            // Store recipes in tiny db
+                            storeInTindyDB();
+
                             getActivity().runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
@@ -129,5 +135,15 @@ public class MasterListFragment extends Fragment {
 
             }
         });
+    }
+
+    private void storeInTindyDB() {
+        TinyDB tiny = new TinyDB(getContext());
+        ArrayList<Object> recipeObjects = new ArrayList<Object>();
+
+        for(Recipe a : mRecipeList){
+            recipeObjects.add((Object)a);
+        }
+        tiny.putListObject(RecipeDetailFragment.RECIPES_KEY, recipeObjects);
     }
 }

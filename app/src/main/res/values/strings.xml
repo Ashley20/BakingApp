@@ -1,4 +1,5 @@
 <resources>
-    <string name="app_name">BakingApp</string>
+    <string name="app_name">Stop hating, start baking!</string>
     <string name="recipe_name_tv">Recipe Name</string>
+    <string name="ingredients">Ingredients:</string>
 </resources>
