@@ -51,19 +51,19 @@ public class MasterListFragment extends Fragment {
                              @Nullable Bundle savedInstanceState) {
 
         final View rootView = inflater.inflate(R.layout.fragment_master_list, container, false);
+        // Get a reference to the fragment_master_list xml layout file
+        recyclerView = (RecyclerView) rootView.findViewById(R.id.recipes_recycler_view);
+
+        recyclerView.setHasFixedSize(true);
+        // Set a LinearLayoutManager on the recyclerview
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+
         return rootView;
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
-        // Get a reference to the fragment_master_list xml layout file
-        recyclerView = (RecyclerView) getView().findViewById(R.id.recipes_recycler_view);
-
-        recyclerView.setHasFixedSize(true);
-        // Set a LinearLayoutManager on the recyclerview
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         if(masterListAdapter == null){
             masterListAdapter = new MasterListAdapter(getContext(), mRecipeList);
@@ -73,6 +73,8 @@ public class MasterListFragment extends Fragment {
         // Get all recipes from network resource and store in a ArrayList
         getRecipies();
     }
+
+
 
     public void getRecipies() {
         if(mRequest == null){
