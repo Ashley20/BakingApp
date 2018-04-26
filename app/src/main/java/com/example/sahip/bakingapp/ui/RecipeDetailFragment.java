@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ExpandableListView;
+import android.widget.ListView;
 import android.widget.TextView;
 
 
@@ -17,6 +18,7 @@ import com.example.sahip.bakingapp.R;
 import com.example.sahip.bakingapp.database.TinyDB;
 import com.example.sahip.bakingapp.models.Ingredient;
 import com.example.sahip.bakingapp.models.Recipe;
+import com.example.sahip.bakingapp.models.Step;
 
 import org.w3c.dom.Text;
 
@@ -35,7 +37,10 @@ public class RecipeDetailFragment extends Fragment {
 
     private TextView recipeNameTv;
     private ExpandableListAdapter expandableListAdapter;
+    private StepsAdapter stepsAdapter;
     private ExpandableListView expandableListView;
+    private ListView listView;
+    private ArrayList<Step> mStepList = new ArrayList<Step>();
     private List<String> mHeaderList;
     private HashMap<String, List<String>> mItemList;
 
@@ -45,6 +50,8 @@ public class RecipeDetailFragment extends Fragment {
                              @Nullable Bundle savedInstanceState) {
 
         final View rootView = inflater.inflate(R.layout.fragment_recipe_detail, container, false );
+        // Get reference to the listview
+        listView = rootView.findViewById(R.id.steps_listview);
 
         return rootView;
     }
@@ -77,14 +84,15 @@ public class RecipeDetailFragment extends Fragment {
             prepareListData(recipe);
 
             expandableListAdapter = new ExpandableListAdapter(getActivity(), mHeaderList, mItemList);
+            stepsAdapter = new StepsAdapter(getActivity(), (ArrayList<Step>) recipe.getSteps());
 
-            // setting list adapter
+            // Setting list adapter
             expandableListView.setAdapter(expandableListAdapter);
+            listView.setAdapter(stepsAdapter);
 
 
 
-
-
+            // Set action bar title as the name of the recipe
             ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(recipe.getName());
         }
 
@@ -95,8 +103,7 @@ public class RecipeDetailFragment extends Fragment {
         mHeaderList = new ArrayList<String>();
         mItemList = new HashMap<String, List<String>>();
 
-        mHeaderList.add("INGREDIENTS");
-      //  mHeaderList.add("STEPS");
+        mHeaderList.add("SEE INGREDIENTS");
 
         List<String> ingredients = new ArrayList<String>();
 

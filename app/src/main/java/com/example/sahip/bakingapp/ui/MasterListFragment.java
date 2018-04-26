@@ -11,12 +11,14 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
 
 import com.example.sahip.bakingapp.MainActivity;
 import com.example.sahip.bakingapp.R;
 import com.example.sahip.bakingapp.RecipeDetailActivity;
 import com.example.sahip.bakingapp.database.TinyDB;
 import com.example.sahip.bakingapp.models.Recipe;
+import com.example.sahip.bakingapp.models.Step;
 import com.example.sahip.bakingapp.rest.HttpClient;
 import com.google.gson.Gson;
 
@@ -51,10 +53,11 @@ public class MasterListFragment extends Fragment {
                              @Nullable Bundle savedInstanceState) {
 
         final View rootView = inflater.inflate(R.layout.fragment_master_list, container, false);
-        // Get a reference to the fragment_master_list xml layout file
+        // Get reference to xml layout file
         recyclerView = (RecyclerView) rootView.findViewById(R.id.recipes_recycler_view);
 
         recyclerView.setHasFixedSize(true);
+
         // Set a LinearLayoutManager on the recyclerview
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 

@@ -2,4 +2,7 @@
     <string name="app_name">Stop hating, start baking!</string>
     <string name="recipe_name_tv">Recipe Name</string>
     <string name="ingredients">Ingredients:</string>
+    <string name="stepDesc">Step description</string>
+    <string name="steps">Steps:</string>
+    <string name="steps_follow">Here are the steps to follow</string>
 </resources>
