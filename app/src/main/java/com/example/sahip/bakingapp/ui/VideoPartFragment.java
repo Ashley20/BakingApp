@@ -22,10 +22,15 @@ import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.Unbinder;
+
 public class VideoPartFragment extends Fragment {
     private String videoUrl;
-    private SimpleExoPlayerView mPlayerView;
+    @BindView(R.id.playerView) SimpleExoPlayerView mPlayerView;
     private SimpleExoPlayer mExoplayer;
+    private Unbinder unbinder;
 
     // Mandatory constructor
     public VideoPartFragment() {}
@@ -35,13 +40,20 @@ public class VideoPartFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_video_part, container, false);
 
-        mPlayerView = rootView.findViewById(R.id.playerView);
+        unbinder = ButterKnife.bind(this, rootView);
+
         mPlayerView.requestFocus();
 
         if(videoUrl != null){
             initializePlayer(Uri.parse(videoUrl));
         }
         return rootView;
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        unbinder.unbind();
     }
 
     public void setVideoUrl(String videoUrl) {

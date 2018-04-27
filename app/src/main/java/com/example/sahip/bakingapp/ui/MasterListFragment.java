@@ -30,6 +30,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.Unbinder;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Request;
@@ -39,12 +42,13 @@ import okhttp3.Response;
 public class MasterListFragment extends Fragment {
     public static final String TAG = MasterListFragment.class.getSimpleName();
 
+    @BindView(R.id.recipes_recycler_view) RecyclerView recyclerView;
     private static final String BASE_URL
             = "https://d17h27t6h515a5.cloudfront.net/topher/2017/May/59121517_baking/baking.json";
-    private RecyclerView recyclerView;
     private MasterListAdapter masterListAdapter;
     private ArrayList<Recipe> mRecipeList = new ArrayList<Recipe>();
     private Request mRequest = null;
+    private Unbinder unbinder;
 
 
     @Nullable
@@ -53,8 +57,8 @@ public class MasterListFragment extends Fragment {
                              @Nullable Bundle savedInstanceState) {
 
         final View rootView = inflater.inflate(R.layout.fragment_master_list, container, false);
-        // Get reference to xml layout file
-        recyclerView = (RecyclerView) rootView.findViewById(R.id.recipes_recycler_view);
+
+        unbinder = ButterKnife.bind(this, rootView);
 
         recyclerView.setHasFixedSize(true);
 
@@ -77,7 +81,11 @@ public class MasterListFragment extends Fragment {
         getRecipies();
     }
 
-
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        unbinder.unbind();
+    }
 
     public void getRecipies() {
         if(mRequest == null){

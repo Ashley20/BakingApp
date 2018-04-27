@@ -16,18 +16,19 @@ import com.example.sahip.bakingapp.database.TinyDB;
 
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 public class MasterListAdapter extends RecyclerView.Adapter<MasterListAdapter.RecipeViewHolder> {
     private List<Recipe> mRecipeList;
     private Context mContext;
 
     public class RecipeViewHolder extends RecyclerView.ViewHolder {
-        private TextView recipeNameTv;
-        private CardView recipeCardView;
-
+        @BindView(R.id.recipe_name_tv) TextView recipeNameTv;
+        @BindView(R.id.recipe_card_view) CardView recipeCardView;
         RecipeViewHolder(View itemView) {
             super(itemView);
-            recipeCardView = itemView.findViewById(R.id.recipe_card_view);
-            recipeNameTv = itemView.findViewById(R.id.recipe_name_tv);
+            ButterKnife.bind(this, itemView);
         }
 
     }

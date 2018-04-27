@@ -30,19 +30,24 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Objects;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.Unbinder;
+
 public class RecipeDetailFragment extends Fragment {
     public static final String TAG = RecipeDetailFragment.class.getSimpleName();
     public static final String RECIPES_KEY = "recipes";
     public static final String RECIPE_POSITION = "position";
 
+    @BindView(R.id.steps_listview) ListView listView;
+    @BindView(R.id.ingredients_expandable_listview) ExpandableListView expandableListView;
     private TextView recipeNameTv;
     private ExpandableListAdapter expandableListAdapter;
     private StepsAdapter stepsAdapter;
-    private ExpandableListView expandableListView;
-    private ListView listView;
     private ArrayList<Step> mStepList = new ArrayList<Step>();
     private List<String> mHeaderList;
     private HashMap<String, List<String>> mItemList;
+    private Unbinder unbinder;
 
     @Nullable
     @Override
@@ -50,8 +55,8 @@ public class RecipeDetailFragment extends Fragment {
                              @Nullable Bundle savedInstanceState) {
 
         final View rootView = inflater.inflate(R.layout.fragment_recipe_detail, container, false );
-        // Get reference to the listview
-        listView = rootView.findViewById(R.id.steps_listview);
+
+        unbinder = ButterKnife.bind(this, rootView);
 
         return rootView;
     }
@@ -77,9 +82,6 @@ public class RecipeDetailFragment extends Fragment {
             // Get reference to the seleted recipe
             Recipe recipe = mRecipeList.get(position);
 
-            // Get the expandable list view
-            expandableListView = (ExpandableListView) getView().findViewById(R.id.ingredients_expandable_listview);
-
             // Prepare the list data
             prepareListData(recipe);
 
@@ -96,6 +98,12 @@ public class RecipeDetailFragment extends Fragment {
             ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(recipe.getName());
         }
 
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        unbinder.unbind();
     }
 
     private void prepareListData(Recipe recipe) {

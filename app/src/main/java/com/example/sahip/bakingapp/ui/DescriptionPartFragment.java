@@ -11,9 +11,15 @@ import android.widget.TextView;
 import com.example.sahip.bakingapp.R;
 import com.example.sahip.bakingapp.StepDetailActivity;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.Unbinder;
+
 public class DescriptionPartFragment extends Fragment {
-    private TextView stepDescriptionTv;
+    @BindView(R.id.description_part_text_view) TextView stepDescriptionTv;
     private String description;
+    private Unbinder unbinder;
+
     public DescriptionPartFragment(){}
 
     @Nullable
@@ -23,7 +29,7 @@ public class DescriptionPartFragment extends Fragment {
 
         View rootView = inflater.inflate(R.layout.fragment_description_part, container, false);
 
-        stepDescriptionTv = rootView.findViewById(R.id.description_part_text_view);
+        unbinder = ButterKnife.bind(this, rootView);
 
         if(description != null){
             stepDescriptionTv.setText(description);
@@ -33,7 +39,15 @@ public class DescriptionPartFragment extends Fragment {
 
     }
 
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        unbinder.unbind();
+    }
+
     public void setDescription(String description) {
         this.description = description;
     }
 }
+
+

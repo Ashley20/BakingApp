@@ -5,4 +5,6 @@
     <string name="stepDesc">Step description</string>
     <string name="steps">Steps:</string>
     <string name="steps_follow">Here are the steps to follow</string>
+    <string name="previous">previous</string>
+    <string name="next">next</string>
 </resources>
