@@ -1,14 +1,17 @@
 package com.example.sahip.bakingapp.ui;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ExpandableListView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -39,6 +42,7 @@ public class RecipeDetailFragment extends Fragment {
     public static final String TAG = RecipeDetailFragment.class.getSimpleName();
     public static final String RECIPES_KEY = "recipes";
     public static final String RECIPE_POSITION = "position";
+    public static final String IS_TWO_PANE = "is_two_pane";
 
     @BindView(R.id.steps_listview) ListView listView;
     @BindView(R.id.ingredients_expandable_listview) ExpandableListView expandableListView;
@@ -49,6 +53,8 @@ public class RecipeDetailFragment extends Fragment {
     private List<String> mHeaderList;
     private HashMap<String, List<String>> mItemList;
     private Unbinder unbinder;
+    private boolean mTwoPane;
+    private View previousSelectedItem;
 
     @Nullable
     @Override
@@ -70,6 +76,7 @@ public class RecipeDetailFragment extends Fragment {
         Bundle args = getArguments();
         if(args != null){
             int position = args.getInt(RECIPE_POSITION, 0);
+            boolean mTwoPane = args.getBoolean(IS_TWO_PANE);
 
             TinyDB tiny = new TinyDB(getContext());
 
@@ -86,17 +93,24 @@ public class RecipeDetailFragment extends Fragment {
             // Store recipe object for later use
             tiny.putObject(StepDetailActivity.RECIPE, recipe);
 
+            if(mTwoPane){
+                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                stepsAdapter = new StepsAdapter(getActivity(), (ArrayList<Step>) recipe.getSteps(), true, fragmentManager);
+            } else {
+                stepsAdapter = new StepsAdapter(getActivity(), (ArrayList<Step>) recipe.getSteps(), false, null);
+            }
+
+
+            listView.setAdapter(stepsAdapter);
+
             // Prepare the list data
             prepareListData(recipe);
 
             expandableListAdapter = new ExpandableListAdapter(getActivity(), mHeaderList, mItemList);
-            stepsAdapter = new StepsAdapter(getActivity(), (ArrayList<Step>) recipe.getSteps());
+
 
             // Setting list adapter
             expandableListView.setAdapter(expandableListAdapter);
-            listView.setAdapter(stepsAdapter);
-
-
 
             // Set action bar title as the name of the recipe
             ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(recipe.getName());

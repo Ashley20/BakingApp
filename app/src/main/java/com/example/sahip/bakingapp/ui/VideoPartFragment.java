@@ -46,7 +46,7 @@ public class VideoPartFragment extends Fragment {
 
         unbinder = ButterKnife.bind(this, rootView);
 
-        mPlayerView.requestFocus();
+       // mPlayerView.requestFocus();
 
         if(mStepList != null){
             String url = mStepList.get(index).getVideoURL();

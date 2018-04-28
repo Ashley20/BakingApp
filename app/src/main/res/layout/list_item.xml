@@ -3,7 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="55dip"
     android:orientation="vertical"
-    android:background="#ECEFF1">
+    android:background="#ECEFF1"
+    android:descendantFocusability="blocksDescendants">
 
     <TextView
         android:id="@+id/ingredients_item_tv"
