@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 
 import com.example.sahip.bakingapp.R;
+import com.example.sahip.bakingapp.StepDetailActivity;
 import com.example.sahip.bakingapp.database.TinyDB;
 import com.example.sahip.bakingapp.models.Ingredient;
 import com.example.sahip.bakingapp.models.Recipe;
@@ -81,6 +82,9 @@ public class RecipeDetailFragment extends Fragment {
 
             // Get reference to the seleted recipe
             Recipe recipe = mRecipeList.get(position);
+
+            // Store recipe object for later use
+            tiny.putObject(StepDetailActivity.RECIPE, recipe);
 
             // Prepare the list data
             prepareListData(recipe);

@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.sahip.bakingapp.R;
+import com.example.sahip.bakingapp.models.Step;
 import com.google.android.exoplayer2.DefaultLoadControl;
 import com.google.android.exoplayer2.ExoPlayerFactory;
 import com.google.android.exoplayer2.LoadControl;
@@ -22,13 +23,16 @@ import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
 
+import java.util.List;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
 public class VideoPartFragment extends Fragment {
-    private String videoUrl;
     @BindView(R.id.playerView) SimpleExoPlayerView mPlayerView;
+    List<Step> mStepList;
+    private int index;
     private SimpleExoPlayer mExoplayer;
     private Unbinder unbinder;
 
@@ -44,8 +48,9 @@ public class VideoPartFragment extends Fragment {
 
         mPlayerView.requestFocus();
 
-        if(videoUrl != null){
-            initializePlayer(Uri.parse(videoUrl));
+        if(mStepList != null){
+            String url = mStepList.get(index).getVideoURL();
+            initializePlayer(Uri.parse(url));
         }
         return rootView;
     }
@@ -54,10 +59,6 @@ public class VideoPartFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         unbinder.unbind();
-    }
-
-    public void setVideoUrl(String videoUrl) {
-        this.videoUrl = videoUrl;
     }
 
     private void initializePlayer(Uri videoUri){
@@ -86,5 +87,36 @@ public class VideoPartFragment extends Fragment {
         mExoplayer = null;
     }
 
+    public void setmStepList(List<Step> mStepList) {
+        this.mStepList = mStepList;
+    }
 
+    public void setIndex(int index) {
+        this.index = index;
+    }
+
+
+    public void goNextStep(){
+        if(index < mStepList.size() - 1){
+            index++;
+        }else{
+            index = 0;
+        }
+
+        releasePlayer();
+        String url = mStepList.get(index).getVideoURL();
+        initializePlayer(Uri.parse(url));
+    }
+
+    public void goPreviousStep(){
+        if(index <= mStepList.size() - 1 && index > 0){
+            index--;
+        }else{
+            index = 0;
+        }
+
+        releasePlayer();
+        String url = mStepList.get(index).getVideoURL();
+        initializePlayer(Uri.parse(url));
+    }
 }

@@ -24,7 +24,7 @@ public class StepsAdapter extends ArrayAdapter<Step>{
 
     @NonNull
     @Override
-    public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+    public View getView(final int position, @Nullable View convertView, @NonNull ViewGroup parent) {
         final Step step = getItem(position);
         // Check if an existing view is being reused, otherwise inflate the view
         if (convertView == null) {
@@ -44,8 +44,7 @@ public class StepsAdapter extends ArrayAdapter<Step>{
                 Bundle bundle = new Bundle();
 
                 if (step != null) {
-                    bundle.putString(StepDetailActivity.STEP_DESCRIPTION, step.getDescription());
-                    bundle.putString(StepDetailActivity.STEP_VIDEO_URL, step.getVideoURL());
+                    bundle.putInt(StepDetailActivity.POSITION, position);
                 }
 
                 intent.putExtras(bundle);

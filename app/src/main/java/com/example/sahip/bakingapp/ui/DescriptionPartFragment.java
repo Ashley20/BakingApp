@@ -10,6 +10,10 @@ import android.widget.TextView;
 
 import com.example.sahip.bakingapp.R;
 import com.example.sahip.bakingapp.StepDetailActivity;
+import com.example.sahip.bakingapp.models.Step;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -17,7 +21,8 @@ import butterknife.Unbinder;
 
 public class DescriptionPartFragment extends Fragment {
     @BindView(R.id.description_part_text_view) TextView stepDescriptionTv;
-    private String description;
+    private List<Step> mStepList;
+    private int index;
     private Unbinder unbinder;
 
     public DescriptionPartFragment(){}
@@ -31,8 +36,8 @@ public class DescriptionPartFragment extends Fragment {
 
         unbinder = ButterKnife.bind(this, rootView);
 
-        if(description != null){
-            stepDescriptionTv.setText(description);
+        if(mStepList != null){
+            stepDescriptionTv.setText(mStepList.get(index).getDescription());
         }
 
         return rootView;
@@ -45,8 +50,33 @@ public class DescriptionPartFragment extends Fragment {
         unbinder.unbind();
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+
+    public void setmStepList(List<Step> mStepList) {
+        this.mStepList = mStepList;
+    }
+
+    public void setIndex(int index) {
+        this.index = index;
+    }
+
+    public void goNextStep(){
+        if(index < mStepList.size() - 1){
+            index++;
+        }else{
+            index = 0;
+        }
+
+        stepDescriptionTv.setText(mStepList.get(index).getDescription());
+    }
+
+    public void goPreviousStep(){
+        if(index <= mStepList.size() - 1 && index > 0){
+            index--;
+        }else{
+            index = 0;
+        }
+
+        stepDescriptionTv.setText(mStepList.get(index).getDescription());
     }
 }
 
