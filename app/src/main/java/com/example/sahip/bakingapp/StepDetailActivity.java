@@ -3,8 +3,10 @@ package com.example.sahip.bakingapp;
 
 import android.net.Uri;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.Toast;
 
@@ -34,8 +36,12 @@ public class StepDetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_step_detail);
 
+        // Up navigation
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         // Set up timber
         Timber.plant(new Timber.DebugTree());
+
         // Set up butterknife
         ButterKnife.bind(this);
 
@@ -68,6 +74,16 @@ public class StepDetailActivity extends AppCompatActivity {
                 .add(R.id.video_container, videoFragment)
                 .commit();
 
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case android.R.id.home:
+                NavUtils.navigateUpFromSameTask(this);
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @OnClick(R.id.step_next_btn)

@@ -4,45 +4,57 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:descendantFocusability="blocksDescendants"
     android:orientation="vertical"
-    tools:context=".StepDetailActivity"
-    android:descendantFocusability="blocksDescendants">
+    tools:context=".StepDetailActivity">
 
-    <FrameLayout
-        android:id="@+id/video_container"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="220dp" />
-    
-    <FrameLayout
-        android:id="@+id/description_container"
-        android:layout_width="match_parent"
-        android:layout_height="200dp" />
-
-    <LinearLayout
-        android:layout_width="fill_parent"
         android:layout_height="wrap_content">
 
-        <Button
-            android:id="@+id/step_prev_btn"
-            android:layout_width="140dp"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/previous"
-            android:layout_margin="22dp"
-            style="@style/Widget.AppCompat.Button"/>
+            android:orientation="vertical">
 
-        <View
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_weight="1" />
+            <FrameLayout
+                android:id="@+id/video_container"
+                android:layout_width="match_parent"
+                android:layout_height="220dp" />
 
-        <Button
-            android:id="@+id/step_next_btn"
-            android:layout_width="140dp"
-            android:layout_height="wrap_content"
-            android:text="@string/next"
-            android:layout_margin="22dp"
-            style="@style/Widget.AppCompat.Button.Colored"/>
+            <FrameLayout
+                android:id="@+id/description_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
 
-    </LinearLayout>
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content">
+
+                <Button
+                    android:id="@+id/step_prev_btn"
+                    style="@style/Widget.AppCompat.Button"
+                    android:layout_width="140dp"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="22dp"
+                    android:text="@string/previous" />
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_weight="1" />
+
+                <Button
+                    android:id="@+id/step_next_btn"
+                    style="@style/Widget.AppCompat.Button.Colored"
+                    android:layout_width="140dp"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="22dp"
+                    android:text="@string/next" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+    </ScrollView>
 
 </LinearLayout>

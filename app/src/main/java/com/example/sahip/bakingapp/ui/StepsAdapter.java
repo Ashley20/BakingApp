@@ -70,7 +70,18 @@ public class StepsAdapter extends ArrayAdapter<Step>{
                             .replace(R.id.video_container, videoFragment)
                             .commit();
 
+                    for (int i = 0; i < parent.getChildCount(); i++) {
+                        if(position == i ){
+                            parent.getChildAt(i).findViewById(R.id.step_btn)
+                                    .setBackgroundColor(Color.CYAN);
+                        }else{
+                            parent.getChildAt(i).findViewById(R.id.step_btn)
+                                    .setBackgroundColor(Color.TRANSPARENT);
+                        }
+                    }
+
                 }else {
+
                     Intent intent = new Intent(getContext(), StepDetailActivity.class);
                     Bundle bundle = new Bundle();
 
@@ -83,15 +94,7 @@ public class StepsAdapter extends ArrayAdapter<Step>{
 
                 }
 
-                for (int i = 0; i < parent.getChildCount(); i++) {
-                    if(position == i ){
-                        parent.getChildAt(i).findViewById(R.id.step_btn)
-                                .setBackgroundColor(Color.CYAN);
-                    }else{
-                        parent.getChildAt(i).findViewById(R.id.step_btn)
-                                .setBackgroundColor(Color.TRANSPARENT);
-                    }
-                }
+
 
             }
         });
