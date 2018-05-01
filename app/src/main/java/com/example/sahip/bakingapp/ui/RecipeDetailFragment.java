@@ -2,6 +2,7 @@ package com.example.sahip.bakingapp.ui;
 
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -43,18 +44,17 @@ public class RecipeDetailFragment extends Fragment {
     public static final String RECIPES_KEY = "recipes";
     public static final String RECIPE_POSITION = "position";
     public static final String IS_TWO_PANE = "is_two_pane";
+    public static final String LISTVIEW_STATE = "listview_state";
 
     @BindView(R.id.steps_listview) ListView listView;
     @BindView(R.id.ingredients_expandable_listview) ExpandableListView expandableListView;
-    private TextView recipeNameTv;
     private ExpandableListAdapter expandableListAdapter;
     private StepsAdapter stepsAdapter;
-    private ArrayList<Step> mStepList = new ArrayList<Step>();
     private List<String> mHeaderList;
     private HashMap<String, List<String>> mItemList;
     private Unbinder unbinder;
-    private boolean mTwoPane;
-    private View previousSelectedItem;
+    private Parcelable state;
+
 
     @Nullable
     @Override
@@ -65,7 +65,17 @@ public class RecipeDetailFragment extends Fragment {
 
         unbinder = ButterKnife.bind(this, rootView);
 
+        if(savedInstanceState != null){
+            state = savedInstanceState.getParcelable(LISTVIEW_STATE);
+        }
+
         return rootView;
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelable(LISTVIEW_STATE, listView.onSaveInstanceState());
     }
 
 
@@ -100,6 +110,10 @@ public class RecipeDetailFragment extends Fragment {
                 stepsAdapter = new StepsAdapter(getActivity(), (ArrayList<Step>) recipe.getSteps(), false, null);
             }
 
+
+            if(state != null){
+                listView.onRestoreInstanceState(state);
+            }
 
             listView.setAdapter(stepsAdapter);
 
