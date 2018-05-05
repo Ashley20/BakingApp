@@ -1,5 +1,7 @@
 package com.example.sahip.bakingapp;
 
+import android.appwidget.AppWidgetManager;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -39,18 +41,18 @@ public class ListRemoteViewsFactory implements RemoteViewsService.RemoteViewsFac
 
     @Override
     public void onCreate() {
-
     }
 
     @Override
     public void onDataSetChanged() {
+
         if (mRequest == null) {
             mRequest = new Request.Builder()
                     .url(BASE_URL)
                     .build();
         }
 
-
+        if(!mRecipeList.isEmpty()) return;
 
         HttpClient.getClient().newCall(mRequest).enqueue(new Callback() {
             @Override
@@ -78,7 +80,11 @@ public class ListRemoteViewsFactory implements RemoteViewsService.RemoteViewsFac
                                 mRecipeList.add(recipe);
 
                             }
-                            Log.d("ListRemoteViewsOnReSucl", mRecipeList.get(0).getName());
+                            AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(mContext);
+                            ComponentName thisWidget = new ComponentName(mContext, BakingWidgetProvider.class);
+                            int[] appWidgetIds = appWidgetManager.getAppWidgetIds(thisWidget);
+                            appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetIds, R.id.widget_list_view);
+
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -96,7 +102,6 @@ public class ListRemoteViewsFactory implements RemoteViewsService.RemoteViewsFac
     @Override
     public int getCount() {
         if(mRecipeList == null) return 0;
-        Log.d("getCOunt:", String.valueOf(mRecipeList.size()));
         return mRecipeList.size();
     }
 
@@ -105,13 +110,12 @@ public class ListRemoteViewsFactory implements RemoteViewsService.RemoteViewsFac
         RemoteViews views = new RemoteViews(mContext.getPackageName(), R.layout.baking_widget_provider);
         Recipe recipe = mRecipeList.get(i);
         views.setTextViewText(R.id.appwidget_text, recipe.getName());
-        Log.d("getViewAt", recipe.getName());
 
-     /*   Bundle extras = new Bundle();
-        extras.putLong(RecipeDetailActivity.RECIPE_POSITION, i);
+        Bundle extras = new Bundle();
+        extras.putInt(RecipeDetailActivity.RECIPE_POSITION, i);
         Intent fillInIntent = new Intent();
         fillInIntent.putExtras(extras);
-        views.setOnClickFillInIntent(R.id.widget_list_view, fillInIntent); */
+        views.setOnClickFillInIntent(R.id.appwidget_text, fillInIntent);
 
         return views;
     }
@@ -128,7 +132,7 @@ public class ListRemoteViewsFactory implements RemoteViewsService.RemoteViewsFac
 
     @Override
     public long getItemId(int i) {
-        return mRecipeList.get(i).getId();
+        return i;
     }
 
     @Override

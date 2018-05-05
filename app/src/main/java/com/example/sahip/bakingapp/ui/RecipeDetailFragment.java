@@ -38,6 +38,7 @@ import java.util.Objects;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
+import timber.log.Timber;
 
 public class RecipeDetailFragment extends Fragment {
     public static final String TAG = RecipeDetailFragment.class.getSimpleName();
@@ -86,6 +87,7 @@ public class RecipeDetailFragment extends Fragment {
         Bundle args = getArguments();
         if(args != null){
             int position = args.getInt(RECIPE_POSITION, 0);
+            Log.d( "RecipeDetaiLFrag: ", String.valueOf(position));
             boolean mTwoPane = args.getBoolean(IS_TWO_PANE);
 
             TinyDB tiny = new TinyDB(getContext());

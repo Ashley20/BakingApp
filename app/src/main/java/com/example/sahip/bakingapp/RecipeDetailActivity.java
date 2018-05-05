@@ -28,7 +28,6 @@ public class RecipeDetailActivity extends AppCompatActivity {
 
         Timber.plant(new Timber.DebugTree());
 
-        Timber.d("RecipeDetailActivity: onCreate called");
 
         // Up navigation
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -47,6 +46,7 @@ public class RecipeDetailActivity extends AppCompatActivity {
                     .findFragmentById(R.id.recipe_detail_fragment);
             // Set intent extras as arguments
             recipeDetailFragment.setArguments(bundle);
+
 
         }
         
