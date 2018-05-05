@@ -7,6 +7,7 @@
     <string name="steps_follow">Here are the steps to follow</string>
     <string name="previous">previous</string>
     <string name="next">next</string>
-    <string name="appwidget_text">EXAMPLE</string>
+    <string name="widget_text">Baking App Widget</string>
     <string name="add_widget">Add widget</string>
+    <string name="empty_view">NO RECIPE FOUND</string>
 </resources>
