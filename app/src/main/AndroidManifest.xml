@@ -22,23 +22,15 @@
         </activity>
         <activity
             android:name=".RecipeDetailActivity"
-            android:launchMode="singleTop"
-            android:parentActivityName=".MainActivity">
+            android:launchMode="singleTop">
 
             <!-- Parent activity meta-data to support 4.0 and lower -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.sahip.bakingapp.MainActivity" />
         </activity>
-        <activity
-            android:name=".StepDetailActivity"
-            android:parentActivityName=".RecipeDetailActivity">
+        <activity android:name=".StepDetailActivity" />
 
-            <!-- Parent activity meta-data to support 4.0 and lower -->
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.sahip.bakingapp.RecipeDetailActivity" />
-        </activity>
 
         <receiver android:name=".BakingWidgetProvider">
             <intent-filter>

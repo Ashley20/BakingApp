@@ -36,8 +36,6 @@ public class StepDetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_step_detail);
 
-        // Up navigation
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         // Set up timber
         Timber.plant(new Timber.DebugTree());
@@ -76,15 +74,7 @@ public class StepDetailActivity extends AppCompatActivity {
 
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()){
-            case android.R.id.home:
-                NavUtils.navigateUpFromSameTask(this);
-                return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
+
 
     @OnClick(R.id.step_next_btn)
     public void nextButtonClick(){

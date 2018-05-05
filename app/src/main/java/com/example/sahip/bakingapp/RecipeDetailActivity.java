@@ -41,6 +41,7 @@ public class RecipeDetailActivity extends AppCompatActivity {
             }else {
                 bundle.putBoolean(RecipeDetailFragment.IS_TWO_PANE, false);
             }
+
             // Get reference to the relative fragment
             RecipeDetailFragment recipeDetailFragment = (RecipeDetailFragment) getSupportFragmentManager()
                     .findFragmentById(R.id.recipe_detail_fragment);

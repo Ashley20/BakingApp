@@ -87,7 +87,6 @@ public class RecipeDetailFragment extends Fragment {
         Bundle args = getArguments();
         if(args != null){
             int position = args.getInt(RECIPE_POSITION, 0);
-            Log.d( "RecipeDetaiLFrag: ", String.valueOf(position));
             boolean mTwoPane = args.getBoolean(IS_TWO_PANE);
 
             TinyDB tiny = new TinyDB(getContext());
