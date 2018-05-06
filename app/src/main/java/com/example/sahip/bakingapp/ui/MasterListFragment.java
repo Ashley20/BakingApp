@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 
+import com.example.sahip.bakingapp.IdlingResource.SimpleIdlingResource;
 import com.example.sahip.bakingapp.MainActivity;
 import com.example.sahip.bakingapp.R;
 import com.example.sahip.bakingapp.RecipeDetailActivity;
@@ -42,6 +43,10 @@ import okhttp3.Response;
 public class MasterListFragment extends Fragment {
     public static final String TAG = MasterListFragment.class.getSimpleName();
 
+    public interface DelayerCallback{
+        void onDone();
+    }
+
     @BindView(R.id.recipes_recycler_view) RecyclerView recyclerView;
     private static final String BASE_URL
             = "https://d17h27t6h515a5.cloudfront.net/topher/2017/May/59121517_baking/baking.json";
@@ -49,6 +54,9 @@ public class MasterListFragment extends Fragment {
     private ArrayList<Recipe> mRecipeList = new ArrayList<Recipe>();
     private Request mRequest = null;
     private Unbinder unbinder;
+    private SimpleIdlingResource mIdlingResource;
+
+
 
 
     @Nullable
@@ -77,8 +85,9 @@ public class MasterListFragment extends Fragment {
         }
         recyclerView.setAdapter(masterListAdapter);
 
-        // Get all recipes from network resource and store in a ArrayList
-        getRecipies();
+
+      /*  // Get all recipes from network resource and store in a ArrayList
+        getRecipies(); */
     }
 
     @Override
@@ -87,7 +96,11 @@ public class MasterListFragment extends Fragment {
         unbinder.unbind();
     }
 
-    public void getRecipies() {
+    public  void getRecipies(final DelayerCallback callback, @Nullable final SimpleIdlingResource idlingResource) {
+        if (idlingResource != null) {
+            idlingResource.setIdleState(false);
+        }
+
         if(mRequest == null){
             mRequest = new Request.Builder()
                     .url(BASE_URL)
@@ -135,6 +148,13 @@ public class MasterListFragment extends Fragment {
 
                                     // Set the adapter on the RecyclerView
                                     recyclerView.setAdapter(masterListAdapter);
+
+                                    if (callback != null) {
+                                        callback.onDone();
+                                        if (idlingResource != null) {
+                                            idlingResource.setIdleState(true);
+                                        }
+                                    }
                                 }
                             });
 
@@ -158,5 +178,9 @@ public class MasterListFragment extends Fragment {
             recipeObjects.add((Object)a);
         }
         tiny.putListObject(RecipeDetailFragment.RECIPES_KEY, recipeObjects);
+    }
+
+    public void setmIdlingResource(SimpleIdlingResource mIdlingResource) {
+        this.mIdlingResource = mIdlingResource;
     }
 }
