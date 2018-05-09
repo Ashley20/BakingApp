@@ -94,7 +94,9 @@ public class StepDetailActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        videoFragment.releasePlayer();
+        if (videoFragment.getmExoplayer() != null){
+            videoFragment.releasePlayer();
+        }
     }
 
 

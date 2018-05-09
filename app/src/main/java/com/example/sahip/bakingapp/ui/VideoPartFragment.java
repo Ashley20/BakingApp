@@ -103,7 +103,10 @@ public class VideoPartFragment extends Fragment {
             index = 0;
         }
 
-        releasePlayer();
+        if(mExoplayer != null) {
+            releasePlayer();
+        }
+
         String url = mStepList.get(index).getVideoURL();
         initializePlayer(Uri.parse(url));
     }
@@ -115,8 +118,19 @@ public class VideoPartFragment extends Fragment {
             index = 0;
         }
 
-        releasePlayer();
+        if(mExoplayer != null){
+            releasePlayer();
+        }
+
         String url = mStepList.get(index).getVideoURL();
         initializePlayer(Uri.parse(url));
+    }
+
+    public SimpleExoPlayer getmExoplayer() {
+        return mExoplayer;
+    }
+
+    public void setmExoplayer(SimpleExoPlayer mExoplayer) {
+        this.mExoplayer = mExoplayer;
     }
 }

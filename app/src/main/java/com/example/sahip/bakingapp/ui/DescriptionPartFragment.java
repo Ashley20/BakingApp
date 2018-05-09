@@ -3,6 +3,7 @@ package com.example.sahip.bakingapp.ui;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,7 +39,11 @@ public class DescriptionPartFragment extends Fragment {
 
         if(mStepList != null){
             stepDescriptionTv.setText(mStepList.get(index).getDescription());
+            // Set action bar title as the step number
+            ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("Step " + mStepList.get(index).getId());
         }
+
+
 
         return rootView;
 
@@ -67,6 +72,8 @@ public class DescriptionPartFragment extends Fragment {
         }
 
         stepDescriptionTv.setText(mStepList.get(index).getDescription());
+        // Change action bar title as the step number
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("Step " + mStepList.get(index).getId());
     }
 
     public void goPreviousStep(){
@@ -77,6 +84,8 @@ public class DescriptionPartFragment extends Fragment {
         }
 
         stepDescriptionTv.setText(mStepList.get(index).getDescription());
+        // Set action bar title as the step number
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("Step " + mStepList.get(index).getId());
     }
 }
 
