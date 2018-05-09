@@ -9,6 +9,9 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.sahip.bakingapp.R;
+import com.example.sahip.bakingapp.StepDetailActivity;
+import com.example.sahip.bakingapp.database.TinyDB;
+import com.example.sahip.bakingapp.models.Recipe;
 import com.example.sahip.bakingapp.models.Step;
 import com.google.android.exoplayer2.DefaultLoadControl;
 import com.google.android.exoplayer2.ExoPlayerFactory;
@@ -30,6 +33,8 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
 public class VideoPartFragment extends Fragment {
+    public static final String INDEX = "index";
+
     @BindView(R.id.playerView) SimpleExoPlayerView mPlayerView;
     List<Step> mStepList;
     private int index;
@@ -46,13 +51,27 @@ public class VideoPartFragment extends Fragment {
 
         unbinder = ButterKnife.bind(this, rootView);
 
-       // mPlayerView.requestFocus();
+
+        if(savedInstanceState != null){
+            index = savedInstanceState.getInt(INDEX);
+            // Get recipe object
+            TinyDB tiny = new TinyDB(getContext());
+            Recipe recipe = tiny.getObject(StepDetailActivity.RECIPE, Recipe.class);
+            mStepList = recipe.getSteps();
+        }
+
 
         if(mStepList != null){
             String url = mStepList.get(index).getVideoURL();
             initializePlayer(Uri.parse(url));
         }
         return rootView;
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt(INDEX, index);
     }
 
     @Override

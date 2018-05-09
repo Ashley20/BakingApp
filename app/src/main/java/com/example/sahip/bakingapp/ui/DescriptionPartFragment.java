@@ -1,6 +1,7 @@
 package com.example.sahip.bakingapp.ui;
 
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
@@ -11,6 +12,8 @@ import android.widget.TextView;
 
 import com.example.sahip.bakingapp.R;
 import com.example.sahip.bakingapp.StepDetailActivity;
+import com.example.sahip.bakingapp.database.TinyDB;
+import com.example.sahip.bakingapp.models.Recipe;
 import com.example.sahip.bakingapp.models.Step;
 
 import java.util.ArrayList;
@@ -21,6 +24,8 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
 public class DescriptionPartFragment extends Fragment {
+    private static final String INDEX = "index";
+
     @BindView(R.id.description_part_text_view) TextView stepDescriptionTv;
     private List<Step> mStepList;
     private int index;
@@ -37,6 +42,14 @@ public class DescriptionPartFragment extends Fragment {
 
         unbinder = ButterKnife.bind(this, rootView);
 
+        if(savedInstanceState != null) {
+            index = savedInstanceState.getInt(INDEX);
+            // Get recipe object
+            TinyDB tiny = new TinyDB(getContext());
+            Recipe recipe = tiny.getObject(StepDetailActivity.RECIPE, Recipe.class);
+            mStepList = recipe.getSteps();
+        }
+
         if(mStepList != null){
             stepDescriptionTv.setText(mStepList.get(index).getDescription());
             // Set action bar title as the step number
@@ -47,6 +60,12 @@ public class DescriptionPartFragment extends Fragment {
 
         return rootView;
 
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt(INDEX, index);
     }
 
     @Override

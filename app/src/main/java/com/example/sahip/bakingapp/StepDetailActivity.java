@@ -43,35 +43,37 @@ public class StepDetailActivity extends AppCompatActivity {
         // Set up butterknife
         ButterKnife.bind(this);
 
-        descriptionFragment = new DescriptionPartFragment();
-        videoFragment = new VideoPartFragment();
+        if (savedInstanceState == null) {
+            descriptionFragment = new DescriptionPartFragment();
+            videoFragment = new VideoPartFragment();
 
-        // Get recipe object
-        TinyDB tiny = new TinyDB(this);
-        recipe = tiny.getObject(RECIPE, Recipe.class);
+            // Get recipe object
+            TinyDB tiny = new TinyDB(this);
+            recipe = tiny.getObject(RECIPE, Recipe.class);
 
-        // Get extras
-        Bundle extras = getIntent().getExtras();
+            // Get extras
+            Bundle extras = getIntent().getExtras();
 
-        if (extras != null) {
-            position = extras.getInt(POSITION);
+            if (extras != null) {
+                position = extras.getInt(POSITION);
 
-            descriptionFragment.setmStepList(recipe.getSteps());
-            descriptionFragment.setIndex(position);
+                descriptionFragment.setmStepList(recipe.getSteps());
+                descriptionFragment.setIndex(position);
 
-            videoFragment.setmStepList(recipe.getSteps());
-            videoFragment.setIndex(position);
+                videoFragment.setmStepList(recipe.getSteps());
+                videoFragment.setIndex(position);
+            }
+
+
+            FragmentManager fragmentManager = getSupportFragmentManager();
+
+            // Fragment transaction
+            fragmentManager.beginTransaction()
+                    .add(R.id.description_container, descriptionFragment)
+                    .add(R.id.video_container, videoFragment)
+                    .commit();
+
         }
-
-
-        FragmentManager fragmentManager = getSupportFragmentManager();
-
-        // Fragment transaction
-        fragmentManager.beginTransaction()
-                .add(R.id.description_container, descriptionFragment)
-                .add(R.id.video_container, videoFragment)
-                .commit();
-
     }
 
 
@@ -79,6 +81,11 @@ public class StepDetailActivity extends AppCompatActivity {
     @OnClick(R.id.step_next_btn)
     public void nextButtonClick(){
         Timber.d("Next button click");
+        if(descriptionFragment == null || videoFragment == null) {
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            descriptionFragment = (DescriptionPartFragment) fragmentManager.findFragmentById(R.id.description_container);
+            videoFragment = (VideoPartFragment) fragmentManager.findFragmentById(R.id.video_container);
+        }
         descriptionFragment.goNextStep();
         videoFragment.goNextStep();
     }
@@ -86,6 +93,11 @@ public class StepDetailActivity extends AppCompatActivity {
     @OnClick(R.id.step_prev_btn)
     public void prevButtonClick(){
         Timber.d("Prev button click");
+        if(descriptionFragment == null || videoFragment == null) {
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            descriptionFragment = (DescriptionPartFragment) fragmentManager.findFragmentById(R.id.description_container);
+            videoFragment = (VideoPartFragment) fragmentManager.findFragmentById(R.id.video_container);
+        }
         descriptionFragment.goPreviousStep();
         videoFragment.goPreviousStep();
     }
@@ -94,6 +106,10 @@ public class StepDetailActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
+        if(videoFragment == null){
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            videoFragment = (VideoPartFragment) fragmentManager.findFragmentById(R.id.video_container);
+        }
         if (videoFragment.getmExoplayer() != null){
             videoFragment.releasePlayer();
         }
