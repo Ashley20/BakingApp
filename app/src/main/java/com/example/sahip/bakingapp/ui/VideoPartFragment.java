@@ -13,6 +13,7 @@ import com.example.sahip.bakingapp.StepDetailActivity;
 import com.example.sahip.bakingapp.database.TinyDB;
 import com.example.sahip.bakingapp.models.Recipe;
 import com.example.sahip.bakingapp.models.Step;
+import com.google.android.exoplayer2.C;
 import com.google.android.exoplayer2.DefaultLoadControl;
 import com.google.android.exoplayer2.ExoPlayerFactory;
 import com.google.android.exoplayer2.LoadControl;
@@ -32,14 +33,18 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
+import static com.example.sahip.bakingapp.StepDetailActivity.POSITION;
+
 public class VideoPartFragment extends Fragment {
     public static final String INDEX = "index";
+    public static final String POSITION = "video_position";
 
     @BindView(R.id.playerView) SimpleExoPlayerView mPlayerView;
     List<Step> mStepList;
     private int index;
     private SimpleExoPlayer mExoplayer;
     private Unbinder unbinder;
+    private long position;
 
     // Mandatory constructor
     public VideoPartFragment() {}
@@ -51,9 +56,10 @@ public class VideoPartFragment extends Fragment {
 
         unbinder = ButterKnife.bind(this, rootView);
 
-
+        position = C.TIME_UNSET;
         if(savedInstanceState != null){
             index = savedInstanceState.getInt(INDEX);
+            position = savedInstanceState.getLong(POSITION, C.TIME_UNSET);
             // Get recipe object
             TinyDB tiny = new TinyDB(getContext());
             Recipe recipe = tiny.getObject(StepDetailActivity.RECIPE, Recipe.class);
@@ -72,6 +78,16 @@ public class VideoPartFragment extends Fragment {
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putInt(INDEX, index);
+        outState.putLong(POSITION, position);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        if (mExoplayer != null) {
+            position = mExoplayer.getCurrentPosition();
+            releasePlayer();
+        }
     }
 
     @Override
@@ -93,6 +109,10 @@ public class VideoPartFragment extends Fragment {
             MediaSource mediaSource = new ExtractorMediaSource(videoUri,
                     new DefaultDataSourceFactory(getContext(), userAgent), new DefaultExtractorsFactory(),
                     null, null);
+
+            if (position != C.TIME_UNSET){
+                mExoplayer.seekTo(position);
+            }
 
             mExoplayer.prepare(mediaSource);
             mExoplayer.setPlayWhenReady(true);
@@ -127,6 +147,7 @@ public class VideoPartFragment extends Fragment {
         }
 
         String url = mStepList.get(index).getVideoURL();
+        position = C.TIME_UNSET;
         initializePlayer(Uri.parse(url));
     }
 
@@ -142,6 +163,7 @@ public class VideoPartFragment extends Fragment {
         }
 
         String url = mStepList.get(index).getVideoURL();
+        position = C.TIME_UNSET;
         initializePlayer(Uri.parse(url));
     }
 
