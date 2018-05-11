@@ -1,5 +1,7 @@
 package com.example.sahip.bakingapp.ui;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -15,27 +17,34 @@ import com.example.sahip.bakingapp.models.Recipe;
 import com.example.sahip.bakingapp.models.Step;
 import com.google.android.exoplayer2.C;
 import com.google.android.exoplayer2.DefaultLoadControl;
+import com.google.android.exoplayer2.ExoPlaybackException;
+import com.google.android.exoplayer2.ExoPlayer;
 import com.google.android.exoplayer2.ExoPlayerFactory;
 import com.google.android.exoplayer2.LoadControl;
 import com.google.android.exoplayer2.SimpleExoPlayer;
+import com.google.android.exoplayer2.Timeline;
 import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory;
 import com.google.android.exoplayer2.source.ExtractorMediaSource;
 import com.google.android.exoplayer2.source.MediaSource;
+import com.google.android.exoplayer2.source.TrackGroupArray;
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
+import com.google.android.exoplayer2.trackselection.TrackSelectionArray;
 import com.google.android.exoplayer2.trackselection.TrackSelector;
 import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
 
+import java.io.FileNotFoundException;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
+import timber.log.Timber;
 
 import static com.example.sahip.bakingapp.StepDetailActivity.POSITION;
 
-public class VideoPartFragment extends Fragment {
+public class VideoPartFragment extends Fragment implements ExoPlayer.EventListener{
     public static final String INDEX = "index";
     public static final String POSITION = "video_position";
 
@@ -57,6 +66,7 @@ public class VideoPartFragment extends Fragment {
         unbinder = ButterKnife.bind(this, rootView);
 
         position = C.TIME_UNSET;
+
         if(savedInstanceState != null){
             index = savedInstanceState.getInt(INDEX);
             position = savedInstanceState.getLong(POSITION, C.TIME_UNSET);
@@ -71,6 +81,10 @@ public class VideoPartFragment extends Fragment {
             String url = mStepList.get(index).getVideoURL();
             initializePlayer(Uri.parse(url));
         }
+
+        mExoplayer.addListener(this);
+
+
         return rootView;
     }
 
@@ -95,8 +109,15 @@ public class VideoPartFragment extends Fragment {
         super.onDestroyView();
         unbinder.unbind();
     }
-
     private void initializePlayer(Uri videoUri){
+        if(videoUri.toString().equals("")){
+            Bitmap icon = BitmapFactory.decodeResource(getActivity().getResources(), R.mipmap.novideo);
+            mPlayerView.setDefaultArtwork(icon);
+            mPlayerView.setUseController(false);
+        } else {
+            mPlayerView.setUseController(true);
+        }
+
         if(mExoplayer == null){
             TrackSelector trackSelector = new DefaultTrackSelector();
             LoadControl loadControl = new DefaultLoadControl();
@@ -173,5 +194,49 @@ public class VideoPartFragment extends Fragment {
 
     public void setmExoplayer(SimpleExoPlayer mExoplayer) {
         this.mExoplayer = mExoplayer;
+    }
+
+    @Override
+    public void onTimelineChanged(Timeline timeline, Object manifest) {
+
+    }
+
+    @Override
+    public void onTracksChanged(TrackGroupArray trackGroups, TrackSelectionArray trackSelections) {
+
+    }
+
+    @Override
+    public void onLoadingChanged(boolean isLoading) {
+
+    }
+
+    @Override
+    public void onPlayerStateChanged(boolean playWhenReady, int playbackState) {
+
+    }
+
+    @Override
+    public void onPlayerError(ExoPlaybackException error) {
+        switch (error.type) {
+            case ExoPlaybackException.TYPE_SOURCE:
+                Timber.e("TYPE_SOURCE: " + error.getSourceException().getMessage());
+                mExoplayer.release();
+                break;
+
+            case ExoPlaybackException.TYPE_RENDERER:
+                Timber.e("TYPE_RENDERER: " + error.getRendererException().getMessage());
+                break;
+
+            case ExoPlaybackException.TYPE_UNEXPECTED:
+                Timber.e("TYPE_UNEXPECTED: " + error.getUnexpectedException().getMessage());
+                break;
+        }
+
+    }
+
+    @Override
+    public void onPositionDiscontinuity() {
+
     }
 }
