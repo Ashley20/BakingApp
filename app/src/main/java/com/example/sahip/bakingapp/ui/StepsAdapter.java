@@ -12,11 +12,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageView;
 
 import com.example.sahip.bakingapp.R;
 import com.example.sahip.bakingapp.RecipeDetailActivity;
 import com.example.sahip.bakingapp.StepDetailActivity;
 import com.example.sahip.bakingapp.models.Step;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -47,6 +49,23 @@ public class StepsAdapter extends ArrayAdapter<Step>{
         }
         // Get reference to the step button
         final Button stepBtn = (Button) convertView.findViewById(R.id.step_btn);
+        ImageView stepIv = (ImageView) convertView.findViewById(R.id.step_iv);
+
+
+        if(step != null && !step.getThumbnailURL().equals("") &&
+                (step.getThumbnailURL().endsWith(".jpg")
+                        || step.getThumbnailURL().endsWith(".png")
+                || step.getThumbnailURL().endsWith(".jpeg"))){
+
+            Picasso.with(mContext)
+                    .load(step.getThumbnailURL())
+                    .into(stepIv);
+            stepIv.setVisibility(View.VISIBLE);
+
+        }else{
+            stepIv.setVisibility(View.GONE);
+        }
+
 
         // Populate the data into the template view using the data object
         stepBtn.setText(step != null ? step.getShortDescription() : null);

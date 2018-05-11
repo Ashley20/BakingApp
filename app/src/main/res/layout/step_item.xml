@@ -5,18 +5,30 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:descendantFocusability="blocksDescendants">
-
-    <Button
-        android:id="@+id/step_btn"
-        android:clickable="false"
-        android:focusable="false"
-        android:focusableInTouchMode="false"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="70dp"
-        android:layout_gravity="center"
-        android:layout_marginTop="2dp"
-        android:textAppearance="@style/Base.TextAppearance.AppCompat.Button"
-        android:background="#FFFFFF"
-        android:text="@string/stepDesc"/>
+        android:orientation="horizontal">
+
+        <ImageView
+            android:layout_width="120dp"
+            android:layout_height="match_parent"
+            android:id="@+id/step_iv"
+            android:background="@color/colorGreen"/>
+
+        <Button
+            android:id="@+id/step_btn"
+            android:clickable="false"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="2dp"
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Button"
+            android:background="#FFFFFF"
+            android:text="@string/stepDesc"/>
+
+    </LinearLayout>
 
 </LinearLayout>
