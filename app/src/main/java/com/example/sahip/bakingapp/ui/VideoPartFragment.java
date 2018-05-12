@@ -9,6 +9,8 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.example.sahip.bakingapp.R;
 import com.example.sahip.bakingapp.StepDetailActivity;
@@ -33,6 +35,7 @@ import com.google.android.exoplayer2.trackselection.TrackSelector;
 import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
+import com.squareup.picasso.Picasso;
 
 import java.io.FileNotFoundException;
 import java.util.List;
@@ -47,13 +50,16 @@ import static com.example.sahip.bakingapp.StepDetailActivity.POSITION;
 public class VideoPartFragment extends Fragment implements ExoPlayer.EventListener{
     public static final String INDEX = "index";
     public static final String POSITION = "video_position";
+    private static final String GET_PLAY_WHEN_READY = "get_play_when_ready";
 
     @BindView(R.id.playerView) SimpleExoPlayerView mPlayerView;
+    @BindView(R.id.step_iv) ImageView mStepIv;
     List<Step> mStepList;
     private int index;
     private SimpleExoPlayer mExoplayer;
     private Unbinder unbinder;
     private long position;
+    private boolean getPlayerWhenReady;
 
     // Mandatory constructor
     public VideoPartFragment() {}
@@ -70,6 +76,7 @@ public class VideoPartFragment extends Fragment implements ExoPlayer.EventListen
         if(savedInstanceState != null){
             index = savedInstanceState.getInt(INDEX);
             position = savedInstanceState.getLong(POSITION, C.TIME_UNSET);
+            getPlayerWhenReady = savedInstanceState.getBoolean(GET_PLAY_WHEN_READY);
             // Get recipe object
             TinyDB tiny = new TinyDB(getContext());
             Recipe recipe = tiny.getObject(StepDetailActivity.RECIPE, Recipe.class);
@@ -78,8 +85,11 @@ public class VideoPartFragment extends Fragment implements ExoPlayer.EventListen
 
 
         if(mStepList != null){
-            String url = mStepList.get(index).getVideoURL();
-            initializePlayer(Uri.parse(url));
+
+            loadStepImage();
+
+            String videoUrl = mStepList.get(index).getVideoURL();
+            initializePlayer(Uri.parse(videoUrl));
         }
 
         mExoplayer.addListener(this);
@@ -88,11 +98,29 @@ public class VideoPartFragment extends Fragment implements ExoPlayer.EventListen
         return rootView;
     }
 
+    private void loadStepImage() {
+        String thumbnailUrl = mStepList.get(index).getThumbnailURL();
+        if(!thumbnailUrl.equals("") && (thumbnailUrl.endsWith(".jpg")
+                || thumbnailUrl.endsWith(".png")
+                || thumbnailUrl.endsWith(".jpeg"))){
+
+            Picasso.with(getContext())
+                    .load(thumbnailUrl)
+                    .into(mStepIv);
+            mStepIv.setVisibility(View.VISIBLE);
+
+        }else{
+            mStepIv.setVisibility(View.GONE);
+            Toast.makeText(getContext(), "Step Image absent", Toast.LENGTH_SHORT).show();
+        }
+    }
+
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putInt(INDEX, index);
         outState.putLong(POSITION, position);
+        outState.putBoolean(GET_PLAY_WHEN_READY, getPlayerWhenReady);
     }
 
     @Override
@@ -100,7 +128,17 @@ public class VideoPartFragment extends Fragment implements ExoPlayer.EventListen
         super.onPause();
         if (mExoplayer != null) {
             position = mExoplayer.getCurrentPosition();
+            getPlayerWhenReady = mExoplayer.getPlayWhenReady();
             releasePlayer();
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if(mExoplayer == null){
+            String videoUrl = mStepList.get(index).getVideoURL();
+            initializePlayer(Uri.parse(videoUrl));
         }
     }
 
@@ -135,8 +173,9 @@ public class VideoPartFragment extends Fragment implements ExoPlayer.EventListen
                 mExoplayer.seekTo(position);
             }
 
+
             mExoplayer.prepare(mediaSource);
-            mExoplayer.setPlayWhenReady(true);
+            mExoplayer.setPlayWhenReady(getPlayerWhenReady);
         }
 
     }
@@ -170,6 +209,8 @@ public class VideoPartFragment extends Fragment implements ExoPlayer.EventListen
         String url = mStepList.get(index).getVideoURL();
         position = C.TIME_UNSET;
         initializePlayer(Uri.parse(url));
+
+        loadStepImage();
     }
 
     public void goPreviousStep(){
@@ -186,6 +227,8 @@ public class VideoPartFragment extends Fragment implements ExoPlayer.EventListen
         String url = mStepList.get(index).getVideoURL();
         position = C.TIME_UNSET;
         initializePlayer(Uri.parse(url));
+
+        loadStepImage();
     }
 
     public SimpleExoPlayer getmExoplayer() {

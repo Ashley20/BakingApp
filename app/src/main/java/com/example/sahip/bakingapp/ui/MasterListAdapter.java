@@ -7,12 +7,14 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.sahip.bakingapp.R;
 import com.example.sahip.bakingapp.RecipeDetailActivity;
 import com.example.sahip.bakingapp.models.Recipe;
 import com.example.sahip.bakingapp.database.TinyDB;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -26,6 +28,8 @@ public class MasterListAdapter extends RecyclerView.Adapter<MasterListAdapter.Re
     public class RecipeViewHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.recipe_name_tv) TextView recipeNameTv;
         @BindView(R.id.recipe_card_view) CardView recipeCardView;
+        @BindView(R.id.recipe_iv) ImageView recipeImageView;
+
         RecipeViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
@@ -50,6 +54,17 @@ public class MasterListAdapter extends RecyclerView.Adapter<MasterListAdapter.Re
     @Override
     public void onBindViewHolder(MasterListAdapter.RecipeViewHolder holder, final int position) {
         holder.recipeNameTv.setText(mRecipeList.get(position).getName());
+
+        // If the recipe image url is not empty then load it into imageView
+        // else make imageview unvisible
+        if(!mRecipeList.get(position).getImage().equals("")){
+            Picasso.with(mContext)
+                    .load(mRecipeList.get(position).getImage())
+                    .into(holder.recipeImageView);
+            holder.recipeImageView.setVisibility(View.VISIBLE);
+        }else {
+            holder.recipeImageView.setVisibility(View.INVISIBLE);
+        }
 
         holder.recipeCardView.setOnClickListener(new View.OnClickListener() {
             @Override

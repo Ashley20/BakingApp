@@ -49,22 +49,6 @@ public class StepsAdapter extends ArrayAdapter<Step>{
         }
         // Get reference to the step button
         final Button stepBtn = (Button) convertView.findViewById(R.id.step_btn);
-        ImageView stepIv = (ImageView) convertView.findViewById(R.id.step_iv);
-
-
-        if(step != null && !step.getThumbnailURL().equals("") &&
-                (step.getThumbnailURL().endsWith(".jpg")
-                        || step.getThumbnailURL().endsWith(".png")
-                || step.getThumbnailURL().endsWith(".jpeg"))){
-
-            Picasso.with(mContext)
-                    .load(step.getThumbnailURL())
-                    .into(stepIv);
-            stepIv.setVisibility(View.VISIBLE);
-
-        }else{
-            stepIv.setVisibility(View.GONE);
-        }
 
 
         // Populate the data into the template view using the data object
